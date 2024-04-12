@@ -16,3 +16,11 @@ Step 3. Simulate the process via the Euler Scheme using  the Dupire formula with
 Step 4. Run the the whole algorithm through EnzymeAD and Matlogica pricing a vanilla 
 
 Output: PV and Vegas wrt regular surface points.
+
+## How to build
+```
+    mkdir build && cd build
+    cmake -G Ninja .. -DLLVM_DIR=/path/to/cmake/llvm -DClang_DIR=/path/to/cmake/clang
+    ninja
+```
+
