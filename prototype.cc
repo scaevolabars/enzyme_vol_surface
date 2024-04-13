@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <functional>
 #include "spline.h"
+#include "c-enzyme.hh"
 
 using Time = double;
 using Price = double;
@@ -68,8 +69,6 @@ class VolSurface {
   
 };
 
-template <typename Retval, typename... Args>
-Retval __enzyme_autodiff(Retval (*)(Args...), auto...);
 
 double foo(VolSurface& surf, double& x, double& y) {return surf.getVar(x,y);}
 
@@ -103,15 +102,6 @@ int main() {
   Price K  = (66.0 + 76.0) / 2;
 
   Price dK = 0.0;
-
-
- extern int enzyme_allocated
-         , enzyme_const
-         , enzyme_dup
-         , enzyme_duponneed
-         , enzyme_out
-         , enzyme_tape;
-
 
   double dfdy = __enzyme_autodiff<double>((&foo), enzyme_const, &surface, 
                                                     enzyme_const, &T,
