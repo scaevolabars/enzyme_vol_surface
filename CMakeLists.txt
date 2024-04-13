@@ -7,7 +7,10 @@ project(vol_surface)
 
 add_subdirectory( Enzyme/enzyme )
 
-add_executable(prototype prototype.cc)
+add_executable(prototype experiment.cc
+
+#prototype.cc
+)
 
 target_link_libraries(prototype PUBLIC ClangEnzymeFlags)
 target_compile_features(prototype PRIVATE cxx_std_20 )
