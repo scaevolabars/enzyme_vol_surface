@@ -18,9 +18,25 @@ Step 4. Run the the whole algorithm through EnzymeAD and Matlogica pricing a van
 Output: PV and Vegas wrt regular surface points.
 
 ## How to build
+It's crucial that your machine should have x86 architercture
+
+Fistsly, one should get latest version of LLVM with following flags
+
+```bash
+#/path/to/llvm_project
+mkdir build && cd build
+cmake -DLLVM_ENABLE_PROJECTS=clang -DCMAKE_BUILD_TYPE=Release -DLLVM_INSTALL_UTILS=ON -DLLVM_INSTALL_TOOLCHAIN_ONLY=ON -G Ninja ../llvm
 ```
-    mkdir build && cd build
-    cmake -G Ninja .. -DLLVM_DIR=/path/to/cmake/llvm -DClang_DIR=/path/to/cmake/clang
-    ninja
+
+Make sure that you complile with with the compiler that you have already built
+
+```bash
+#/path/to/your_project
+mkdir build && cd build
+cmake -G Ninja .. -DLLVM_DIR=/home/ubuntu/.enzyme/llvm-project/build/lib/cmake/llvm -DClang_DIR=/home/ubuntu/.enzyme/llvm-project/build/lib/cmake/clangs
+ninja
 ```
+
+
+
 
