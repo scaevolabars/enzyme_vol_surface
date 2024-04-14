@@ -4,6 +4,7 @@
 #include <utility>
 #include <cmath>
 #include <memory>
+#include "c-enzyme.h"
 
 class Calculation {
     public:
@@ -17,7 +18,7 @@ class Calculation {
     }
 
     std::unique_ptr<std::vector<double>> squares_unique_ptr(double x, int n) {
-        std::unique_ptr<std::vector<double>> sq{};
+        std::unique_ptr<std::vector<double>> sq = std::make_unique<std::vector<double>>();
         for (int i = 1; i <= n; ++i) {
             sq->push_back(std::pow(x,i));
         }
@@ -34,16 +35,6 @@ class Calculation {
         return sm;
     }
 };
-
- extern int enzyme_allocated
-         , enzyme_const
-         , enzyme_dup
-         , enzyme_duponneed
-         , enzyme_out
-         , enzyme_tape;
-
-template <typename Retval, typename... Args>
-Retval __enzyme_autodiff(Retval (*)(Args...), auto...);
 
 double foo(Calculation& calc, double x) {return calc(x);}
 
