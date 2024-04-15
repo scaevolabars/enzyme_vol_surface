@@ -7,7 +7,7 @@ project(vol_surface)
 
 add_subdirectory( Enzyme/enzyme )
 
-add_executable(prototype linear_interp.cc
+add_executable(prototype volsurface.cc
 
 #prototype.cc
 )
