@@ -21,6 +21,10 @@ Vec<Time> vec{};
 Mat<Time> mat{};
 
 
+
+
+
+
 class VolSurface {
   //using IM = InterpolationMethod;
   const Vec<Time> times_;
@@ -37,10 +41,13 @@ class VolSurface {
       ): times_(t), strikes_(s), vols_(v) {
   }
   private:
-  std::pair<size_t, size_t> get_time_slice_idx(Time& t) {
-      auto idx = std::upper_bound(times_.begin(), times_.end(), t) - times_.begin();
-      return {idx - 1, idx};        
+  size_t find_closest_t(double x) const {
+    Vec<double>::const_iterator it;
+    it=std::upper_bound(times_.begin(),times_.end(), x);       // *it > x
+    size_t idx = std::max( int(it-times_.begin())-1, 0);   // m_x[idx] <= x
+    return idx;
   }
+
 
   Vec<mDouble> get_vol_slice_vector(Time& time) {
       auto [t1, t2] = get_time_slice_idx(time);
