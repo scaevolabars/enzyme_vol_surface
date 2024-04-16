@@ -40,3 +40,19 @@ ninja
 
 
 
+# Calling convention for `__enzyme_autodiff`
+1. The first argument should either be a function pointer to the code being differentiated, or a cast of the function pointer.
+2. Always annotate arguments with their type `enzyme_const` `enzyme_out` `enzyme_dup` etc...
+3. Enzyme assumes that shadow arguments passed in are already initialized and have the same structure as the primal values. Running Enzyme’s generated gradient will increment the shadow value by the amount of the resultant gradient.
+4. `enzyme_out` only works for arguments passed by-value
+
+5. If a function needs to return a primitive, return it as-is
+6. If a function needs to return a vector, return it via
+7. Accept primitive arguments as-is (by value)
+8. Accept vector arguments by-reference std:: unique_ptr
+
+
+
+
+# Ref
+https://github.com/EnzymeAD/enzyme-explorer

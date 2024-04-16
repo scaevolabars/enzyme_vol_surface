@@ -4,12 +4,15 @@
 extern int enzyme_allocated
          , enzyme_const
          , enzyme_dup
-         , enzyme_duponneed
+         , enzyme_dupnoneed
          , enzyme_out
          , enzyme_tape;
 
-template <typename Retval, typename... Args>
-Retval __enzyme_autodiff(Retval (*)(Args...), auto...);
+template < typename return_type, typename ... T >
+return_type __enzyme_autodiff(void*, T ... );
+
+template < typename return_type, typename ... T >
+return_type __enzyme_fwddiff(void*, T ... );
 
 #define APPROX_EQ(LHS, RHS, TOL) {\
     if (std::abs((LHS) - (RHS)) > (TOL)) {\

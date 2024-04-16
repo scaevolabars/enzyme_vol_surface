@@ -7,6 +7,7 @@
 #include <functional>
 #include <memory>
 #include <random>
+#include <cstdio>
 #include "c-enzyme.h"
 
 
@@ -92,7 +93,7 @@ class VolSurface {
         return m_a[i] + m_b[i] * xi + m_c[i] * xi * xi + m_d[i] * xi * xi * xi;
   }
 
-  mDouble getVar(double& time, double& strike) {
+  mDouble getVar(double time, double strike) {
 
     size_t left_idx_t = find_closest_t(time);
     size_t right_idx_t = left_idx_t + 1;
@@ -141,7 +142,7 @@ class VolSurface {
     return cubic_interpolation(strike);
   }
 
-  mDouble PV(mDouble& time, mDouble& strike) {
+  mDouble PV(mDouble time, mDouble strike) {
       auto sigma = getVar(time, strike);
       auto S0 = strike;
       
@@ -181,26 +182,30 @@ class VolSurface {
   Vec<double> m_pv_vec;
 };
 
-double wrapVar(VolSurface& surf, double& x, double& y) {return surf.getVar(x,y);}
-double wrapPV(VolSurface& surf, double& x, double& y) {return surf.PV(x,y);}
+double wrapVar(VolSurface& surf, double x, double y) {return surf.getVar(x,y);}
+double wrapPV(VolSurface& surf, double x, double y) {return surf.PV(x,y);}
 
 mDouble dVdK(VolSurface& s, double T, double K){
   Price dK = 0.0;
-  __enzyme_autodiff((&wrapVar), enzyme_const, &s, 
-                             enzyme_const, &T,
-                             enzyme_dup, &K, &dK);
+  double deriv = __enzyme_fwddiff<mDouble>((void*)(&wrapVar), enzyme_const, &s, 
+                             enzyme_const, T,
+                             enzyme_dupnoneed, K, dK);
 
-  return dK;
+  return deriv;
 }
 
 mDouble dPVdK(VolSurface& s, double T, double K){
   Price dK = 0.0;
-  __enzyme_autodiff((&wrapPV), enzyme_const, &s, 
-                             enzyme_const, &T,
-                             enzyme_dup, &K, &dK);
+  double deriv = __enzyme_fwddiff<mDouble>((void*)(&wrapPV), enzyme_const, &s, 
+                             enzyme_const, T,
+                             enzyme_dupnoneed, K, dK);
 
-  return dK;
+  return deriv;
 }
+
+double f(double x) { return x * x; }
+
+
 
 int main() {
 
@@ -216,12 +221,20 @@ int main() {
     {0.5352105909,0.508991143,0.4840308026}
   };
 
-  VolSurface surface{times, strikes, vols, 173 + 20, 10, 10};
+  VolSurface surface{times, strikes, vols, 173 + 20, 1000, 1000};
   Time T =  (172 + 173) / 2;
   Price K  = (66.0 + 76.0) / 2;
-  std::cout << "T = " << T << " K = " << K <<  "n";
-  std::cout << " Interpolated surface: " <<  surface.PV(T, K) << "\n";
-  std::cout << "Print Derivatives: dPVdK: " << dPVdK(surface, T, K) << "\n";
+  
+
+  std::cout << "T = " << T << " K = " << K <<  "\n";
+  std::cout << "PV: " <<  surface.PV(T, K) << "\n";
+  std::cout << "dPVdK: " << dPVdK(surface, T, K) << "\n";
+
+  double x = 5.0;
+  double dx = 1.0;  
+  double df_dx = __enzyme_fwddiff<mDouble>((void*)f, enzyme_dup, x, dx); 
+  std::cout << "f(x) = " << f(x) << " f'(x) = " << df_dx;
+
      
     return 0;
 }
