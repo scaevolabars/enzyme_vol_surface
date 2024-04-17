@@ -40,7 +40,7 @@ ninja
 
 
 
-# Calling convention for `__enzyme_autodiff`
+# Calling convention for ```__enzyme_autodiff```
 1. The first argument should either be a function pointer to the code being differentiated, or a cast of the function pointer.
 2. Always annotate arguments with their type `enzyme_const` `enzyme_out` `enzyme_dup` etc...
 3. Enzyme assumes that shadow arguments passed in are already initialized and have the same structure as the primal values. Running Enzyme’s generated gradient will increment the shadow value by the amount of the resultant gradient.
