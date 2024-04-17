@@ -12,7 +12,7 @@ Step 2. For each given TTM (including both quoted from the surface, and the ones
 - [x]
 Step 3. Simulate the process via the Euler Scheme using  the Dupire formula with both the second order derivative of premium wrt. strike and the first order derivative of premium wrt TTM taken finite difference balanced (computed on the fly, including the needed extra linear tot. var. moneyness fixed interpolation).
 
-- []
+- [ ]
 Step 4. Run the the whole algorithm through EnzymeAD and Benchmark pricing a vanilla 
 
 Output: PV and Vegas wrt regular surface points.
